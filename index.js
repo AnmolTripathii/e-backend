@@ -506,7 +506,7 @@ cloudinary.config({
 
 app.use(express.json());
 const corsOptions = {
-  origin: 'https://e-commerce-azfe.vercel.app',
+  origin: 'https://f-ecommerce-nu.vercel.app',
   methods:["GET","POST","PUT","DELETE"],
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
