@@ -439,7 +439,7 @@ const bcrypt = require('bcrypt');
 require("dotenv").config(); 
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
-const axios = require("axios");
+
 
 // Cloudinary configuration
 cloudinary.config({ 
@@ -695,71 +695,6 @@ app.post('/getcart', fetchUser, async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
-
-const API_URL = "https://leetcode.com/graphql";
-
-// Function to query the LeetCode API
-async function queryLeetCodeAPI(query, variables) {
-  try {
-    const response = await axios.post(API_URL, { query, variables }, {
-      headers: {
-        "Content-Type": "application/json",
-        Referer: "https://leetcode.com",
-      },
-    });
-
-    if (response.data.errors) {
-      throw new Error(response.data.errors[0].message);
-    }
-    return response.data;
-  } catch (error) {
-    if (error.response) {
-      throw new Error(`Error from LeetCode API: ${JSON.stringify(error.response.data)}`);
-    } else if (error.request) {
-      throw new Error("No response received from LeetCode API");
-    } else {
-      throw new Error(`Error in setting up the request: ${error.message}`);
-    }
-  }
-}
-
-// Define the backend route
-app.get("/api/leetcode", async (req, res) => {
-  // Hard-coded username for testing
-  const username = "eren_yeager_";
-
-  const query = `
-    query ($username: String!) {
-      matchedUser(username: $username) {
-        username
-        profile {
-          realName
-          reputation
-          ranking
-        }
-      }
-    }
-  `;
-
-  const variables = { username };
-
-  try {
-    const data = await queryLeetCodeAPI(query, variables);
-
-    // Send the formatted response to the client
-    res.status(200).json({
-      success: true,
-      data: data.data.matchedUser,
-    });
-  } catch (error) {
-    // Send the error message to the client
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-});
-
 
 // Server initialization
 app.listen(port, () => {
